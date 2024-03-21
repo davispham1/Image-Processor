@@ -39,8 +39,7 @@ int main(int argc, char* argv[]) {
     }
 
 
-    TGAImage image1 = readTGA(inputfile);
-    TGAImage result;
+    TGAImage result = readTGA(inputfile);
 
     int index = 3;
 
@@ -60,7 +59,7 @@ int main(int argc, char* argv[]) {
             }
 
             TGAImage image2 = readTGA(inputfile2);
-            result = multiply(image1, image2);
+            result = multiply(result, image2);
         }
         else if (operation == "subtract") {
             if (!checkArguments(argc, argv, i + 1)) return 1;
@@ -74,7 +73,7 @@ int main(int argc, char* argv[]) {
                 return 1;
             }
             TGAImage image2 = readTGA(inputfile2);
-            result = subtract(image1, image2);
+            result = subtract(result, image2);
         }
         else if (operation == "overlay") {
             if (!checkArguments(argc, argv, i + 1)) return 1;
@@ -88,7 +87,7 @@ int main(int argc, char* argv[]) {
                 return 1;
             }
             TGAImage image2 = readTGA(inputfile2);
-            result = Overlay(image1, image2);
+            result = Overlay(result, image2);
         }
         else if (operation == "screen") {
             if (!checkArguments(argc, argv, i + 2)) return 1;
@@ -102,7 +101,7 @@ int main(int argc, char* argv[]) {
                 return 1;
             }
             TGAImage image2 = readTGA(inputfile2);
-            result = screen(image2, image1);
+            result = screen(image2, result);
         }
         else if (operation == "combine") {
             if (!checkArguments(argc, argv, i + 2)) return 1;
@@ -118,10 +117,10 @@ int main(int argc, char* argv[]) {
             TGAImage image2 = readTGA(inputfile2);
             string inputfile3 = argv[++i];
             TGAImage blue = readTGA(inputfile3);
-            result = combine(blue, image2, image1);
+            result = combine(blue, image2, result);
         }
         else if (operation == "flip") {
-            result = flip(image1);
+            result = flip(result);
             while (i + 1 < argc && string(argv[i + 1]) == "flip") {
                 result = flip(result);
                 i++;
@@ -129,15 +128,15 @@ int main(int argc, char* argv[]) {
         }
         else if (operation == "onlyred") {
                 TGAImage red;
-                result = only(image1, red, 'r');
+                result = only(result, red, 'r');
             }
         else if (operation == "onlygreen") {
                 TGAImage green;
-                result = only(image1, green, 'g');
+                result = only(result, green, 'g');
             }
         else if (operation == "onlyblue") {
                 TGAImage blue;
-                result = only(image1, blue, 'b');
+                result = only(result, blue, 'b');
             }
         else if (operation == "addred" || operation == "addgreen" || operation == "addblue" ||
                  operation == "scalered" || operation == "scalegreen" || operation == "scaleblue") {
@@ -151,22 +150,22 @@ int main(int argc, char* argv[]) {
                 return 1;
             }
             if (operation == "addred") {
-                result = adding(image1, value, 'r');
+                result = adding(result, value, 'r');
             }
             else if (operation == "addgreen") {
-                result = adding(image1, value, 'g');
+                result = adding(result, value, 'g');
             }
             else if (operation == "addblue") {
-                result = adding(image1, value, 'b');
+                result = adding(result, value, 'b');
             }
             else if (operation == "scalered") {
-                result = scaling(image1, value, 'r');
+                result = scaling(result, value, 'r');
             }
             else if (operation == "scalegreen") {
-                result = scaling(image1, value, 'g');
+                result = scaling(result, value, 'g');
             }
             else if (operation == "scaleblue") {
-                result = scaling(image1, value, 'b');
+                result = scaling(result, value, 'b');
             }
             i++;
         }
