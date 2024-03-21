@@ -8,7 +8,7 @@ using namespace std;
 int main(int argc, char* argv[]) {
 
     if (argc < 4 || std::strcmp(argv[1], "--help") == 0) {
-        std::cout << "Project 2: Image Processing, Fall 2023\n"
+        std::cout << "Project 2: Image Processing, Spring 2024\n"
                   << "Usage:\n"
                   << "\t./project.out [output] [firstimage] [method] [...]" << std::endl;
         return 0;
