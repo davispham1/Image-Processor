@@ -310,18 +310,13 @@ TGAImage scaling(const TGAImage& image, int scale, char channel) {
             unsigned char green = image.pixelData[i][j].green;
             unsigned char blue = image.pixelData[i][j].blue;
 
+            // Scale the channel value
             if (channel == 'r') {
-                red *= scale;
-                if (red < 0) red = 0;
-                if (red > 255) red = 255;
+                red = static_cast<unsigned char>(min(red * scale, 255));
             } else if (channel == 'g') {
-                green *= scale;
-                if (green < 0) green = 0;
-                if (green > 255) green = 255;
+                green = static_cast<unsigned char>(min(green * scale, 255));
             } else if (channel == 'b') {
-                blue *= scale;
-                if (blue < 0) blue = 0;
-                if (blue > 255) blue = 255;
+                blue = static_cast<unsigned char>(min(blue * scale, 255));
             }
 
             result.pixelData[i][j] = {blue, green, red};
