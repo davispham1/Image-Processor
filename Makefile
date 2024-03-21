@@ -4,12 +4,12 @@ build:
 tasks: multiply flip subtract
 
 multiply:
-	./project2.out output/out.tga input/circles.tga multiply input/layer1.tga
+	./project2.out output/part11.tga input/circles.tga multiply input/layer1.tga
 
 flip:
-	./project2.out output/flip.tga input/layer1.tga flip
+	./project2.out output/part12.tga input/layer1.tga flip
 
 subtract:
-	./project2.out output/subtract.tga input/layer1.tga subtract input/layer2.tga
+	./project2.out output/part13.tga input/layer1.tga subtract input/layer2.tga
 
 
