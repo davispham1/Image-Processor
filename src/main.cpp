@@ -1,63 +1,158 @@
-
+#include <iostream>
 #include "header.h"
+#include <fstream>
+#include <cstring>
 using namespace std;
 
 
-int main() {
+int main(int argc, char* argv[]) {
 
-    // task 1
+    if (argc < 4 || std::strcmp(argv[1], "--help") == 0) {
+        std::cout << "Project 2: Image Processing, Fall 2023\n"
+                  << "Usage:\n"
+                  << "\t./project.out [output] [firstimage] [method] [...]" << std::endl;
+        return 0;
+    }
 
-    TGAImage layer1 = readTGA("input/layer1.tga");
-    TGAImage pattern1 = readTGA("input/pattern1.tga");
-    TGAImage Result = multiply(layer1, pattern1);
-    writeTGA("output/part1.tga", Result);
+    string outputfile = argv[1];
 
-    // task 2
-    TGAImage layer2 = readTGA("input/layer2.tga");
-    TGAImage car = readTGA("input/car.tga");
-    TGAImage Result2 = subtract(car, layer2);
-    writeTGA("output/part2.tga", Result2);
+    // check outputfile
+    if (!isValidFileName(outputfile)){
+        cout << "Invalid file name." << endl;
+        return 1;
+    }
 
-    //task 3
-    TGAImage pattern2 = readTGA("input/pattern2.tga");
-    TGAImage text = readTGA("input/text.tga");
-    TGAImage Result3 = multiply(layer1, pattern2);
-    TGAImage Result_3 = screen(Result3, text);
-    writeTGA("output/part3.tga", Result_3);
 
-    //task 4
-    TGAImage circles = readTGA("input/circles.tga");
-    TGAImage result4 = multiply(circles, layer2);
-    TGAImage result_4 = subtract(result4, pattern2);
-    writeTGA("output/part4.tga", result_4);
+    string inputfile = argv[2];
 
-    //task 5
-    TGAImage result5 = Overlay(layer1, pattern1);
-    writeTGA("output/part5.tga", result5);
+    // check inputfile
+    if (!isValidFileName(inputfile)) {
+        cout << "Invalid file name." << endl;
+        return 1;
+    }
+    // check if exist
+    ifstream file(inputfile);
+    if (!file.is_open()) {
+        cout << "File does not exist." << endl;
+        return 1;
+    }
 
-    //task 6
-    TGAImage result6 = adding(car, 200);
-    writeTGA("output/part6.tga", result6);
 
-    //task 7
-    TGAImage result7 = task7(car);
-    writeTGA("output/part7.tga", result7);
+    TGAImage image1 = readTGA(inputfile);
+    TGAImage result;
 
-    //task 8
-    TGAImage blue, green, red;
-    seperate(car, blue, green, red);
 
-    //task 9
-    TGAImage layer_blue = readTGA("input/layer_blue.tga");
-    TGAImage layer_green = readTGA("input/layer_green.tga");
-    TGAImage layer_red = readTGA("input/layer_red.tga");
-    TGAImage CombinedImage = combine(layer_blue, layer_green, layer_red);
-    writeTGA("output/part9.tga", CombinedImage);
+    for (int i = 3; i < argc; i++) {
+        string operation = argv[i];
 
-    //task 10
-    TGAImage text2 = readTGA("input/text2.tga");
-    TGAImage result10 = flip(text2);
-    writeTGA("output/part10.tga", result10);
+        if (operation == "multiply") {
+            if (!checkArguments(argc, argv, i + 1)) return 1;
+            string inputfile2 = argv[++i];
+            if (!isValidFileName(inputfile2)) {
+                cout << "Invalid argument, invalid file name." << endl;
+                return 1;
+            }
+            TGAImage image2 = readTGA(inputfile2);
+            result = multiply(image1, image2);
+        }
+        else if (operation == "subtract") {
+            if (!checkArguments(argc, argv, i + 1)) return 1;
+            string inputfile2 = argv[++i];
+            if (!isValidFileName(inputfile2)) {
+                cout << "Invalid argument, invalid file name." << endl;
+                return 1;
+            }
+            TGAImage image2 = readTGA(inputfile2);
+            result = subtract(image1, image2);
+        }
+        else if (operation == "overlay") {
+            if (!checkArguments(argc, argv, i + 1)) return 1;
+            string inputfile2 = argv[++i];
+            if (!isValidFileName(inputfile2)) {
+                cout << "Invalid argument, invalid file name." << endl;
+                return 1;
+            }
+            TGAImage image2 = readTGA(inputfile2);
+            result = Overlay(image1, image2);
+        }
+        else if (operation == "screen") {
+            if (!checkArguments(argc, argv, i + 2)) return 1;
+            string inputfile2 = argv[++i];
+            if (!isValidFileName(inputfile2)) {
+                cout << "Invalid argument, invalid file name." << endl;
+                return 1;
+            }
+            TGAImage image2 = readTGA(inputfile2);
+            result = screen(image2, image1);
+        }
+        else if (operation == "combine") {
+            if (!checkArguments(argc, argv, i + 2)) return 1;
+            string inputfile2 = argv[i++];
+            if (!isValidFileName(inputfile2)) {
+                cout << "Invalid argument, invalid file name." << endl;
+                return 1;
+            }
+            TGAImage image2 = readTGA(inputfile2);
+            string inputfile3 = argv[i++];
+            TGAImage blue = readTGA(inputfile3);
+            result = combine(blue, image2, image1);
+        }
+        else if (operation == "flip") {
+            result = flip(image1);
+            while (i + 1 < argc && string(argv[i + 1]) == "flip") {
+                result = flip(result);
+                i++;
+            }
+        }
+        else if (operation == "onlyred") {
+                TGAImage red;
+                result = only(image1, red, 'r');
+            }
+        else if (operation == "onlygreen") {
+                TGAImage green;
+                result = only(image1, green, 'g');
+            }
+        else if (operation == "onlyblue") {
+                TGAImage blue;
+                result = only(image1, blue, 'b');
+            }
+        else if (operation == "addred" || operation == "addgreen" || operation == "addblue" ||
+                 operation == "scalered" || operation == "scalegreen" || operation == "scaleblue") {
+            if (!checkArguments(argc, argv, i + 1)) return 1;
+            int value;
+            try {
+                value = stoi(argv[i + 1]);
+            }
+            catch (const invalid_argument&) {
+                cout << "Invalid argument, expected number." << endl;
+                return 1;
+            }
+            if (operation == "addred") {
+                result = adding(image1, value, 'r');
+            }
+            else if (operation == "addgreen") {
+                result = adding(image1, value, 'g');
+            }
+            else if (operation == "addblue") {
+                result = adding(image1, value, 'b');
+            }
+            else if (operation == "scalered") {
+                result = scaling(image1, value, 'r');
+            }
+            else if (operation == "scalegreen") {
+                result = scaling(image1, value, 'g');
+            }
+            else if (operation == "scaleblue") {
+                result = scaling(image1, value, 'b');
+            }
+            i++;
+        }
+        else {
+            cout << "Invalid method name." << endl;
+            return 1;
+        }
+    }
+    writeTGA(outputfile,result);
 
 
     return 0;
