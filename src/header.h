@@ -268,46 +268,63 @@ TGAImage Overlay(const TGAImage& topLayer, const TGAImage& bottomLayer) {
     return result;
 }
 
-TGAImage adding(const TGAImage& image, int add) {
+TGAImage adding(const TGAImage& image, int add, char channel) {
     TGAImage result;
     result.header = image.header;
     result.pixelData = vector<vector<Pixel>>(image.header.height, vector<Pixel>(image.header.width));
 
     for (int i = 0; i < image.header.height; i++) {
         for (int j = 0; j < image.header.width; j++) {
-            int green = image.pixelData[i][j].green + add;
-            if (green < 0) green = 0;
-            if (green > 255) green = 255;
-
-            result.pixelData[i][j] = {
-                    image.pixelData[i][j].blue,
-                    static_cast<unsigned char>(green),
-                    image.pixelData[i][j].red
-            };
+            unsigned char red = image.pixelData[i][j].red;
+            unsigned char green = image.pixelData[i][j].green;
+            unsigned char blue = image.pixelData[i][j].blue;
+            if (channel == 'r'){
+                red = image.pixelData[i][j].red + add;
+                if (red < 0) red = 0;
+                if (red > 255) red = 255;
+            }
+            else if (channel == 'g'){
+                green = image.pixelData[i][j].green + add;
+                if (green < 0) green = 0;
+                if (green > 255) green = 255;
+            }
+            else if (channel == 'b'){
+                blue = image.pixelData[i][j].blue + add;
+                if (blue < 0) blue = 0;
+                if (blue > 255) blue = 255;
+            }
+            result.pixelData[i][j] = {blue, green, red};
         }
     }
     return result;
 }
 
-TGAImage task7(const TGAImage& image) {
+TGAImage scaling(const TGAImage& image, int scale, char channel) {
     TGAImage result;
     result.header = image.header;
     result.pixelData = vector<vector<Pixel>>(image.header.height, vector<Pixel>(image.header.width));
 
     for (int i = 0; i < image.header.height; i++) {
         for (int j = 0; j < image.header.width; j++) {
-            int red = image.pixelData[i][j].red * 4;
-            int blue = image.pixelData[i][j].blue * 0;
-            if (red < 0) red = 0;
-            if (red > 255) red = 255;
-            if (blue < 0) blue = 0;
-            if (blue > 255) blue = 255;
+            unsigned char red = image.pixelData[i][j].red;
+            unsigned char green = image.pixelData[i][j].green;
+            unsigned char blue = image.pixelData[i][j].blue;
 
-            result.pixelData[i][j] = {
-                    static_cast<unsigned char>(blue),
-                    image.pixelData[i][j].green,
-                    static_cast<unsigned char>(red)
-            };
+            if (channel == 'r') {
+                red *= scale;
+                if (red < 0) red = 0;
+                if (red > 255) red = 255;
+            } else if (channel == 'g') {
+                green *= scale;
+                if (green < 0) green = 0;
+                if (green > 255) green = 255;
+            } else if (channel == 'b') {
+                blue *= scale;
+                if (blue < 0) blue = 0;
+                if (blue > 255) blue = 255;
+            }
+
+            result.pixelData[i][j] = {blue, green, red};
         }
     }
     return result;
@@ -331,6 +348,28 @@ void seperate(const TGAImage& image, TGAImage& blue, TGAImage& green, TGAImage& 
     writeTGA("output/part8_b.tga", blue);
     writeTGA("output/part8_g.tga", green);
     writeTGA("output/part8_r.tga", red);
+}
+
+TGAImage only(const TGAImage& image, TGAImage& channel, char color) {
+    channel.header = image.header;
+    channel.pixelData = vector<vector<Pixel>>(image.header.height, vector<Pixel>(image.header.width));
+    for (int i = 0; i < image.header.height; i++) {
+        for (int j = 0; j < image.header.width; j++) {
+            if (color == 'r') {
+                channel.pixelData[i][j] = {image.pixelData[i][j].red, image.pixelData[i][j].red,
+                                           image.pixelData[i][j].red};
+            }
+            else if (color == 'g') {
+                channel.pixelData[i][j] = {image.pixelData[i][j].green, image.pixelData[i][j].green,
+                                           image.pixelData[i][j].green};
+            }
+            else if (color == 'b') {
+                channel.pixelData[i][j] = {image.pixelData[i][j].blue, image.pixelData[i][j].blue,
+                                           image.pixelData[i][j].blue};
+            }
+        }
+    }
+    return channel;
 }
 
 TGAImage combine(const TGAImage& blue, const TGAImage& green, const TGAImage& red) {
@@ -361,4 +400,16 @@ TGAImage flip(const TGAImage& image){
         }
     }
     return result;
+}
+
+bool isValidFileName(const string& filename) {
+    return filename.size() >= 4 && filename.substr(filename.size() - 4) == ".tga";
+}
+
+bool checkArguments(int argc, char* argv[], int index) {
+    if (index >= argc) {
+        cout << "Missing argument." << endl;
+        return false;
+    }
+    return true;
 }
