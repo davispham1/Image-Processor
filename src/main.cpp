@@ -52,6 +52,11 @@ int main(int argc, char* argv[]) {
                 cout << "Invalid argument, invalid file name." << endl;
                 return 1;
             }
+            if(!fileExists(inputfile2)){
+                cout << "Invalid argument, file does not exist." << endl;
+                return 1;
+            }
+
             TGAImage image2 = readTGA(inputfile2);
             result = multiply(image1, image2);
         }
@@ -60,6 +65,10 @@ int main(int argc, char* argv[]) {
             string inputfile2 = argv[++i];
             if (!isValidFileName(inputfile2)) {
                 cout << "Invalid argument, invalid file name." << endl;
+                return 1;
+            }
+            if(!fileExists(inputfile2)){
+                cout << "Invalid argument, file does not exist." << endl;
                 return 1;
             }
             TGAImage image2 = readTGA(inputfile2);
@@ -72,6 +81,10 @@ int main(int argc, char* argv[]) {
                 cout << "Invalid argument, invalid file name." << endl;
                 return 1;
             }
+            if(!fileExists(inputfile2)){
+                cout << "Invalid argument, file does not exist." << endl;
+                return 1;
+            }
             TGAImage image2 = readTGA(inputfile2);
             result = Overlay(image1, image2);
         }
@@ -82,18 +95,26 @@ int main(int argc, char* argv[]) {
                 cout << "Invalid argument, invalid file name." << endl;
                 return 1;
             }
+            if(!fileExists(inputfile2)){
+                cout << "Invalid argument, file does not exist." << endl;
+                return 1;
+            }
             TGAImage image2 = readTGA(inputfile2);
             result = screen(image2, image1);
         }
         else if (operation == "combine") {
             if (!checkArguments(argc, argv, i + 2)) return 1;
-            string inputfile2 = argv[i++];
+            string inputfile2 = argv[++i];
             if (!isValidFileName(inputfile2)) {
                 cout << "Invalid argument, invalid file name." << endl;
                 return 1;
             }
+            if(!fileExists(inputfile2)){
+                cout << "Invalid argument, file does not exist." << endl;
+                return 1;
+            }
             TGAImage image2 = readTGA(inputfile2);
-            string inputfile3 = argv[i++];
+            string inputfile3 = argv[++i];
             TGAImage blue = readTGA(inputfile3);
             result = combine(blue, image2, image1);
         }
