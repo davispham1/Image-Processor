@@ -278,22 +278,23 @@ TGAImage adding(const TGAImage& image, int add, char channel) {
             unsigned char red = image.pixelData[i][j].red;
             unsigned char green = image.pixelData[i][j].green;
             unsigned char blue = image.pixelData[i][j].blue;
-            if (channel == 'r'){
-                red = image.pixelData[i][j].red + add;
-                if (red < 0) red = 0;
-                if (red > 255) red = 255;
+
+            if (channel == 'r') {
+                int newRed = red + add;
+                if (newRed < 0) newRed = 0;
+                if (newRed > 255) newRed = 255;
+                result.pixelData[i][j] = { blue, green, static_cast<unsigned char>(newRed) };
+            } else if (channel == 'g') {
+                int newGreen = green + add;
+                if (newGreen < 0) newGreen = 0;
+                if (newGreen > 255) newGreen = 255;
+                result.pixelData[i][j] = { blue, static_cast<unsigned char>(newGreen), red };
+            } else if (channel == 'b') {
+                int newBlue = blue + add;
+                if (newBlue < 0) newBlue = 0;
+                if (newBlue > 255) newBlue = 255;
+                result.pixelData[i][j] = { static_cast<unsigned char>(newBlue), green, red };
             }
-            else if (channel == 'g'){
-                green = image.pixelData[i][j].green + add;
-                if (green < 0) green = 0;
-                if (green > 255) green = 255;
-            }
-            else if (channel == 'b'){
-                blue = image.pixelData[i][j].blue + add;
-                if (blue < 0) blue = 0;
-                if (blue > 255) blue = 255;
-            }
-            result.pixelData[i][j] = {blue, green, red};
         }
     }
     return result;
