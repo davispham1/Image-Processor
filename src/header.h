@@ -413,3 +413,8 @@ bool checkArguments(int argc, char* argv[], int index) {
     }
     return true;
 }
+
+bool fileExists(const std::string& filename) {
+    std::ifstream file(filename);
+    return file.is_open();
+}
