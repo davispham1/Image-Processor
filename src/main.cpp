@@ -7,7 +7,7 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
 
-    if (argc < 4 || std::strcmp(argv[1], "--help") == 0) {
+    if (argc == 1 || strcmp(argv[1], "--help") == 0) {
         std::cout << "Project 2: Image Processing, Spring 2024\n"
                   << "Usage:\n"
                   << "\t./project.out [output] [firstimage] [method] [...]" << std::endl;
@@ -15,6 +15,7 @@ int main(int argc, char* argv[]) {
     }
 
     string outputfile = argv[1];
+
 
     // check outputfile
     if (!isValidFileName(outputfile)){
@@ -41,6 +42,7 @@ int main(int argc, char* argv[]) {
     TGAImage image1 = readTGA(inputfile);
     TGAImage result;
 
+    int index = 3;
 
     for (int i = 3; i < argc; i++) {
         string operation = argv[i];
@@ -171,6 +173,7 @@ int main(int argc, char* argv[]) {
         else {
             cout << "Invalid method name." << endl;
             return 1;
+
         }
     }
     writeTGA(outputfile,result);
@@ -178,3 +181,4 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+
