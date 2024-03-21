@@ -4,13 +4,12 @@
 #include <cstring>
 using namespace std;
 
-
 int main(int argc, char* argv[]) {
 
     if (argc == 1 || strcmp(argv[1], "--help") == 0) {
         cout << "Project 2: Image Processing, Spring 2024\n" << endl;
         cout << "Usage:\n"
-                  << "\t./project2.out [output] [firstImage] [method] [...]" << std::endl;
+             << "\t./project2.out [output] [firstImage] [method] [...]" << std::endl;
         return 0;
     }
 
@@ -172,7 +171,6 @@ int main(int argc, char* argv[]) {
         else {
             cout << "Invalid method name." << endl;
             return 1;
-
         }
     }
     writeTGA(outputfile,result);
@@ -180,4 +178,3 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-
