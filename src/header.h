@@ -284,12 +284,14 @@ TGAImage adding(const TGAImage& image, int add, char channel) {
                 if (newRed < 0) newRed = 0;
                 if (newRed > 255) newRed = 255;
                 result.pixelData[i][j] = { blue, green, static_cast<unsigned char>(newRed) };
-            } else if (channel == 'g') {
+            } 
+            else if (channel == 'g') {
                 int newGreen = green + add;
                 if (newGreen < 0) newGreen = 0;
                 if (newGreen > 255) newGreen = 255;
                 result.pixelData[i][j] = { blue, static_cast<unsigned char>(newGreen), red };
-            } else if (channel == 'b') {
+            }
+            else if (channel == 'b') {
                 int newBlue = blue + add;
                 if (newBlue < 0) newBlue = 0;
                 if (newBlue > 255) newBlue = 255;
@@ -314,9 +316,11 @@ TGAImage scaling(const TGAImage& image, int scale, char channel) {
             // Scale the channel value
             if (channel == 'r') {
                 red = static_cast<unsigned char>(min(red * scale, 255));
-            } else if (channel == 'g') {
+            } 
+            else if (channel == 'g') {
                 green = static_cast<unsigned char>(min(green * scale, 255));
-            } else if (channel == 'b') {
+            } 
+            else if (channel == 'b') {
                 blue = static_cast<unsigned char>(min(blue * scale, 255));
             }
 
